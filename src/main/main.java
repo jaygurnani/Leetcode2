@@ -12,9 +12,13 @@ public class main {
         //int output = calculate1(s);
 
         //int[][] input={ {0,2}};
-        int[][] input={ {2,1,1}, {1,1,0}, {0,1,2}};
+        //int[][] input={ {2,1,1}, {1,1,0}, {0,1,2}};
         //int[][] input={ {0,2,2}};
-        int output = orangesRotting(input);
+        //int output = orangesRotting(input);
+
+        List<List<Integer>> immutableList = List.of(List.of(1,3), List.of(3,0,1), List.of(2), List.of(0));
+        boolean output = canVisitAllRooms(immutableList);
+
         System.out.println(output);
     }
 
@@ -241,5 +245,49 @@ public class main {
         if (freshOrangeCount == 0)
             return intCurrentLevel;
         return -1;
+    }
+
+    public static boolean canVisitAllRooms(List<List<Integer>> rooms) {
+        // There are no rooms to search
+        if(rooms.isEmpty()) {
+            return false;
+        }
+
+        Stack<List<Integer>> nodes = new Stack<List<Integer>>();
+        HashSet<Integer> visited = new HashSet<>();
+
+        // First room is unlocked
+        List<Integer> emptyRoom = rooms.get(0);
+        visited.add(0);
+
+        nodes.push(emptyRoom);
+        while (!nodes.isEmpty()){
+            int size = nodes.size();
+            while(size-- > 0) {
+                List<Integer> currentKey = nodes.pop();
+
+                // For every room we have the key to
+                for(Integer i : currentKey) {
+                    // If we have visited the room already
+                    if (visited.contains(i)) {
+                        continue;
+                    }
+
+                    List<Integer> currentRoomItems = rooms.get(i);
+
+                    for(Integer currentRoomItem: currentRoomItems) {
+                        // we can now visit the room
+                        nodes.add(Arrays.asList(currentRoomItem));
+                    }
+
+                    visited.add(i);
+                }
+            }
+
+        }
+        if (visited.size() == rooms.size()) {
+            return true;
+        }
+        return false;
     }
 }
