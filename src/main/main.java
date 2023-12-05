@@ -15,9 +15,11 @@ public class main {
         //int[][] input={ {2,1,1}, {1,1,0}, {0,1,2}};
         //int[][] input={ {0,2,2}};
         //int output = orangesRotting(input);
+        //List<List<Integer>> immutableList = List.of(List.of(1,3), List.of(3,0,1), List.of(2), List.of(0));
+        //boolean output = canVisitAllRooms(immutableList);
 
-        List<List<Integer>> immutableList = List.of(List.of(1,3), List.of(3,0,1), List.of(2), List.of(0));
-        boolean output = canVisitAllRooms(immutableList);
+        int[][] input={ {0,0,0}, {1,1,0},{0,0,0}, {0,1,1},{0,0,0} };
+        int output = shortestPath(input, 1);
 
         System.out.println(output);
     }
@@ -117,9 +119,6 @@ public class main {
         int columns = maze[0].length;
 
         Queue<int[]> nodes = new LinkedList<>();
-
-        // We don't need a visited since we can just use the maze itself
-        Queue<int[]> visited = new LinkedList<>();
 
         nodes.offer(entrance);
         maze[entrance[0]][entrance[1]] = '+';
@@ -283,11 +282,77 @@ public class main {
                     visited.add(i);
                 }
             }
-
         }
+
+        // If we have visited all the rooms possible, return true, else false
         if (visited.size() == rooms.size()) {
             return true;
         }
         return false;
+    }
+
+    public static int shortestPath(int[][] grid, int k) {
+        int rows = grid.length;
+        int columns = grid[0].length;
+        int[][] gridCopy = grid;
+
+        // If we only have one row and column, we are at the end
+        if (rows == 1 && columns == 1) {
+            return 0;
+        }
+
+        // We are going to perform BFS search so we use a queue
+        Queue<int[]> nodes = new LinkedList<>();
+        int[][] visited = new int[rows][columns];
+        for (int[] i: visited) {
+            Arrays.fill(i, Integer.MAX_VALUE);
+        }
+        visited[0][0] = 0;
+
+        // Start at top left corner & mark 0,0 as visited
+        nodes.offer(new int[]{0,0,0});
+
+        // As simple 2D array to keep track of the directions to take.
+        // We can use 4 separate operation, but it is more efficient to use a for-loop to go
+        int[][] directions = new int[][] {{0,1},{0,-1},{1,0},{-1,0}};
+        int steps = 0;
+        while (!nodes.isEmpty()) {
+            int n = nodes.size();
+
+            for (int i = 0; i < n; i++) {
+                // Get currently where we are
+                int[] current = nodes.poll();
+
+                for (int[] direction : directions) {
+                    int newX = current[0] + direction[0];
+                    int newY = current[1] + direction[1];
+
+                    // Check if we are out of bounds
+                    if (newX >= rows || newX < 0 || newY >= columns || newY < 0) {
+                        continue;
+                    }
+
+                    if (newX == rows - 1 && newY == columns - 1) {
+                        return steps + 1;
+                    }
+
+                    int newK = current[2] + gridCopy[newX][newY];
+                    if (newK > k) {
+                        continue;
+                    }
+
+                    //  continue if we have more optimal result
+                    if (visited[newX][newY] <= newK) {
+                        continue;
+                    }
+
+                    visited[newX][newY] = newK;
+                    nodes.offer(new int[]{newX, newY, newK});
+                }
+            }
+            steps++;
+        }
+
+        return -1;
     }
 }
