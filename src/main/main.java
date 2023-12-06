@@ -1,6 +1,8 @@
 package main;
 
+import javax.swing.tree.TreeNode;
 import javax.xml.stream.events.Characters;
+import javafx.util.Pair;
 import java.util.*;
 
 public class main {
@@ -354,5 +356,172 @@ public class main {
         }
 
         return -1;
+    }
+
+    public static List<Integer> rightSideViewNotWorking(TreeNode root) {
+        TreeNode starting = root;
+        List<Integer> returnList = new ArrayList<Integer>();
+        Stack<TreeNode> nodes = new Stack<>();
+
+        if (root == null) {
+            return returnList;
+        }
+
+        nodes.push(starting);
+        while (!nodes.isEmpty()) {
+            TreeNode current = nodes.pop();
+            returnList.add(current.val);
+
+            if (current.right != null) {
+                nodes.push(current.right);
+            }
+        }
+
+        return returnList;
+    }
+
+    public List<Integer> rightSideView(TreeNode root) {
+        List<Integer> list = new ArrayList<Integer>();
+
+        helper(root, list, 0);
+        return list;
+    }
+
+    public void helper(TreeNode node, List<Integer> list, int depth) {
+        if (node != null) {
+            if (depth == list.size()) {
+                list.add(node.val);
+            }
+            helper(node.right, list, depth + 1);
+            helper(node.left, list, depth + 1);
+        }
+    }
+
+    public int maxLevelSum(TreeNode root) {
+        TreeNode starting = root;
+        Queue<TreeNode> nodes = new LinkedList<>();
+
+        if (root == null) {
+            return 0;
+        }
+
+        nodes.offer(starting);
+        int maxLevel = 0;
+        int maxVal = Integer.MIN_VALUE;
+        int currentLevel = maxLevel;
+
+        while (!nodes.isEmpty()) {
+            // Keep track of level
+            int n = nodes.size();
+            int currentLevelVal = 0;
+            currentLevel++;
+
+            for(int i = 0; i < n; i++) {
+                TreeNode current = nodes.poll();
+                currentLevelVal = currentLevelVal + current.val;
+
+                if (current.right != null) {
+                    nodes.offer(current.right);
+                }
+
+                if (current.left != null) {
+                    nodes.offer(current.left);
+                }
+            }
+
+            // we have finished this depth
+            if (currentLevelVal > maxVal) {
+                maxVal = currentLevelVal;
+                maxLevel = currentLevel;
+            }
+        }
+
+        return maxLevel;
+    }
+
+    public int goodNodesIterativePainInTheAss(TreeNode root) {
+        TreeNode currentRoot = root;
+        int goodNodes = 1;
+
+        Stack<AbstractMap.SimpleEntry<TreeNode, Integer>> nodes = new Stack<>();
+        // Push the current item + max in the tree
+        nodes.push();
+
+        while(!nodes.isEmpty()) {
+            AbstractMap.SimpleEntry<TreeNode, Integer> current = nodes.pop();
+
+        }
+
+        return goodNodes;
+    }
+
+    int goodNodes = 0;
+    public int goodNodes(TreeNode root) {
+        depthFirstSearch(root, Integer.MIN_VALUE);
+        return goodNodes;
+    }
+
+    public void depthFirstSearch(TreeNode current, int maxValue) {
+        int currentMax = maxValue;
+        // if the current one is greater than or equal to max value
+        if (current.val >= maxValue) {
+            goodNodes++;
+            currentMax = current.val;
+        }
+
+        // Go down the left and right subtree
+        if (current.left != null) {
+            depthFirstSearch(current.left, currentMax);
+        }
+        if (current.right != null) {
+            depthFirstSearch(current.right, currentMax);
+
+        }
+    }
+
+    int totalFound = 0;
+    public int pathSum(TreeNode root, int targetSum) {
+        if (root == null) {
+            return 0;
+        }
+
+        depthFirstSearchSum(root, targetSum, 0);
+        pathSum(root.left, targetSum);
+        pathSum(root.right, targetSum);
+        return totalFound;
+    }
+
+    public void depthFirstSearchSum(TreeNode currentNode, int targetSum, long counter) {
+        if (currentNode == null) {
+            return;
+        }
+
+        long currentCounter = currentNode.val + counter;
+        if(currentCounter == targetSum) {
+            totalFound++;
+        }
+
+        if (currentNode.left != null) {
+            depthFirstSearchSum(currentNode.left, targetSum, currentCounter);
+        }
+        if (currentNode.right != null) {
+            depthFirstSearchSum(currentNode.right, targetSum, currentCounter);
+        }
+
+    }
+
+
+    // ** provided classes ** //
+    public class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode() {}
+        TreeNode(int val) { this.val = val; }
+        TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
     }
 }
