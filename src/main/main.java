@@ -2,7 +2,6 @@ package main;
 
 import javax.swing.tree.TreeNode;
 import javax.xml.stream.events.Characters;
-import javafx.util.Pair;
 import java.util.*;
 
 public class main {
@@ -20,8 +19,15 @@ public class main {
         //List<List<Integer>> immutableList = List.of(List.of(1,3), List.of(3,0,1), List.of(2), List.of(0));
         //boolean output = canVisitAllRooms(immutableList);
 
-        int[][] input={ {0,0,0}, {1,1,0},{0,0,0}, {0,1,1},{0,0,0} };
-        int output = shortestPath(input, 1);
+//        int[][] input={ {0,0,0}, {1,1,0},{0,0,0}, {0,1,1},{0,0,0} };
+//        int output = shortestPath(input, 1);
+
+//        int[] nums1 = {1,2};
+//        int[] nums2 = {3,4};
+//        double output = findMedianSortedArrays(nums1, nums2);
+
+        int[] input = {1,-1,0};
+        int output = subarraySum(input, 0);
 
         System.out.println(output);
     }
@@ -440,19 +446,21 @@ public class main {
     }
 
     public int goodNodesIterativePainInTheAss(TreeNode root) {
-        TreeNode currentRoot = root;
-        int goodNodes = 1;
+//        TreeNode currentRoot = root;
+//        int goodNodes = 1;
+//
+//        Stack<AbstractMap.SimpleEntry<TreeNode, Integer>> nodes = new Stack<>();
+//        // Push the current item + max in the tree
+//        nodes.push();
+//
+//        while(!nodes.isEmpty()) {
+//            AbstractMap.SimpleEntry<TreeNode, Integer> current = nodes.pop();
+//
+//        }
+//
+//        return goodNodes;
 
-        Stack<AbstractMap.SimpleEntry<TreeNode, Integer>> nodes = new Stack<>();
-        // Push the current item + max in the tree
-        nodes.push();
-
-        while(!nodes.isEmpty()) {
-            AbstractMap.SimpleEntry<TreeNode, Integer> current = nodes.pop();
-
-        }
-
-        return goodNodes;
+        return 0;
     }
 
     int goodNodes = 0;
@@ -508,6 +516,90 @@ public class main {
             depthFirstSearchSum(currentNode.right, targetSum, currentCounter);
         }
 
+    }
+
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return CreateBST(nums, 0, nums.length - 1);
+    }
+
+    private TreeNode CreateBST(int[] nums, int l, int r) {
+        if (l > r) {
+            return null;
+        }
+        int mid = l + (r - l) / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+        root.left = CreateBST(nums, l, mid - 1);
+        root.right = CreateBST(nums, mid + 1, r);
+        return root;
+    }
+
+    public static double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int nums1Length = nums1.length;
+        int nums2Length = nums2.length;
+        int[] newArray = new int[nums1Length + nums2Length];
+
+        int pointer1 = 0;
+        int pointer2 = 0;
+        for(int i = 0; i < newArray.length; i++) {
+            int m1, m2;
+            if (pointer1 >= nums1Length) {
+                m1 = Integer.MAX_VALUE;
+            } else {
+                m1 = nums1[pointer1];
+            }
+
+            if (pointer2 >= nums2Length) {
+                m2 = Integer.MAX_VALUE;
+            } else {
+                m2 = nums2[pointer2];
+            }
+
+            if (m1 < m2) {
+                newArray[i] = nums1[pointer1];
+                pointer1++;
+            } else {
+                newArray[i] = nums2[pointer2];
+                pointer2++;
+            }
+        }
+
+        int median = (nums1Length + nums2Length) / 2;
+        // Check if the sum of n and m is odd.
+        if ((nums1Length + nums2Length) % 2 == 1){
+            return newArray[median];
+        } else {
+            return (double)(newArray[median-1] + newArray[median]) / 2;
+        }
+
+    }
+
+    public static int subarraySum(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+
+        int totalFound = 0;
+        int prefixsum = 0;
+
+        // Initialize the base case
+        map.put(0,1);
+
+        for(int i = 0; i < nums.length; i++) {
+            prefixsum = prefixsum + nums[i];
+
+            int difference = prefixsum - k;
+            if (map.containsKey(difference)) {
+                int current = map.get(difference);
+                totalFound = totalFound + current;
+            }
+
+            if (map.containsKey(prefixsum)) {
+                int prefixSumCurrent = map.get(prefixsum);
+                map.put(prefixsum, ++prefixSumCurrent);
+            } else {
+                map.put(prefixsum, 1);
+            }
+        }
+
+        return totalFound;
     }
 
 
