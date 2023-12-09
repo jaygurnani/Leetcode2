@@ -29,8 +29,9 @@ public class main {
         //int[] input = {1,-1,0};
         //int output = subarraySum(input, 0);
 
-        List<List<Integer>> output = combinationSum3(3, 9);
+        //List<List<Integer>> output = combinationSum3(3, 9);
 
+        int output = minDistance("horse", "ros");
         System.out.println(output);
     }
 
@@ -651,6 +652,46 @@ public class main {
         }
 
         return item;
+    }
+
+    public static int minDistance(String word1, String word2) {
+        int word1Length = word1.length();
+        int word2Length = word2.length();
+        char[] word1CharArray = word1.toCharArray();
+        char[] word2CharArray = word2.toCharArray();
+
+        int[][] dp = new int[word1Length + 1][word2Length +1];
+
+        // Base case
+        for(int i = 0; i <= word2Length; i++) {
+            dp[0][i] = i;
+        }
+        for(int j = 0; j <= word1Length; j++) {
+            dp[j][0] = j;
+        }
+
+        for(int i = 0; i < word1Length; i++) {
+            for(int j = 0; j < word2Length; j++) {
+                if (word1CharArray[i] == word2CharArray[j]) {
+                    dp[i+1][j+1] = dp[i][j];
+                } else {
+                    // Insert
+                    int insertCost = dp[i][j+1];
+
+                    // Delete
+                    int updateCost = dp[i+1][j];
+
+                    // Replace
+                    int replaceCost = dp[i][j];
+
+                    int min1 = Math.min(insertCost, updateCost);
+                    int min2 = Math.min(replaceCost, min1);
+                    dp[i+1][j+1] = min2 + 1;
+                }
+            }
+        }
+
+        return dp[word1Length][word2Length];
     }
 
     // ** provided classes ** //
