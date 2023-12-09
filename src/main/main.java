@@ -19,15 +19,17 @@ public class main {
         //List<List<Integer>> immutableList = List.of(List.of(1,3), List.of(3,0,1), List.of(2), List.of(0));
         //boolean output = canVisitAllRooms(immutableList);
 
-//        int[][] input={ {0,0,0}, {1,1,0},{0,0,0}, {0,1,1},{0,0,0} };
-//        int output = shortestPath(input, 1);
+        //int[][] input={ {0,0,0}, {1,1,0},{0,0,0}, {0,1,1},{0,0,0} };
+        //int output = shortestPath(input, 1);
 
-//        int[] nums1 = {1,2};
-//        int[] nums2 = {3,4};
-//        double output = findMedianSortedArrays(nums1, nums2);
+        //int[] nums1 = {1,2};
+        //int[] nums2 = {3,4};
+        //double output = findMedianSortedArrays(nums1, nums2);
 
-        int[] input = {1,-1,0};
-        int output = subarraySum(input, 0);
+        //int[] input = {1,-1,0};
+        //int output = subarraySum(input, 0);
+
+        List<List<Integer>> output = combinationSum3(3, 9);
 
         System.out.println(output);
     }
@@ -602,6 +604,54 @@ public class main {
         return totalFound;
     }
 
+    public static List<List<Integer>> combinationSum3(int k, int n) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<HashSet<Integer>> resultHashMap = new ArrayList<>();
+        backtrack(new ArrayList<>(), result, n ,k, resultHashMap);
+        return result;
+    }
+
+    public static void backtrack(List<Integer> currentList, List<List<Integer>> result, int n, int k, List<HashSet<Integer>> resultHashMap) {
+        if (currentList.size() == k) {
+            if (sumsToN(currentList, n)) {
+                HashSet<Integer> item =  calcFreq(currentList);
+                if (!resultHashMap.contains(item)) {
+                    resultHashMap.add(item);
+                    result.add(currentList);
+                }
+            }
+            return;
+        }
+
+        int[] zeroNine = new int[] {1,2,3,4,5,6,7,8,9};
+        for (Integer val : zeroNine) {
+            if (!currentList.contains(val) && currentList.size() < k) {
+                List<Integer> clone = new ArrayList<>(currentList);
+                clone.add(val);
+                backtrack(clone, result, n, k, resultHashMap);
+            }
+        }
+     }
+
+    public static boolean sumsToN(List<Integer> list, int n) {
+        int current = 0;
+        for(Integer i : list) {
+            current = current + i;
+        }
+        if (current == n) {
+            return true;
+        }
+        return false;
+    }
+
+    public static HashSet<Integer> calcFreq(List<Integer> result) {
+        HashSet<Integer> item = new HashSet<Integer>();
+        for (Integer r : result) {
+            item.add(r);
+        }
+
+        return item;
+    }
 
     // ** provided classes ** //
     public class TreeNode {
