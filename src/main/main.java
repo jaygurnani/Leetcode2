@@ -694,6 +694,129 @@ public class main {
         return dp[word1Length][word2Length];
     }
 
+
+    private int answer = Integer.MAX_VALUE;
+    private Integer previous = null;
+
+    public int minDiffInBST(TreeNode root) {
+        inOrderTraversal(root);
+        return answer;
+    }
+
+    public void inOrderTraversal(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        inOrderTraversal(root.left);
+        if (previous != null) {
+            answer = Math.min(answer, root.val - previous);
+        }
+
+        previous = root.val;
+        inOrderTraversal(root.right);
+    }
+
+    int maxIslandSize = 0;
+    public int maxAreaOfIsland(int[][] grid) {
+        // First we need to find an island
+        int x = grid.length;
+        int y = grid[0].length;
+
+        for(int i = 0; i < x; i++) {
+            for(int j = 0; j < y; j++) {
+                if (grid[i][j] == 1) {
+                    int newMax = bfs(i, j, grid);
+                    maxIslandSize = Math.max(newMax, maxIslandSize);
+                }
+            }
+        }
+
+        return maxIslandSize;
+    }
+
+    public int bfs(int x, int y, int[][] grid) {
+        int innerMaxIsland = 0;
+        int gridXRow = grid.length;
+        int gridYRow = grid[0].length;
+        Queue<int[]> nodes = new LinkedList<>();
+        nodes.offer(new int[]{x, y});
+
+        innerMaxIsland++;
+        grid[x][y] = 0;
+
+        int[][] directions = new int[][] {{0,1},{0,-1},{1,0},{-1,0}};
+        while(!nodes.isEmpty()) {
+            int n = nodes.size();
+            for (int i = 0; i < n; i++) {
+                int[] current = nodes.poll();
+
+                for(int[] direction : directions) {
+                    int newX = current[0] + direction[0];
+                    int newY = current[1] + direction[1];
+
+                    // We are out of bounds
+                    if (newX >= gridXRow || newX < 0 || newY >= gridYRow || newY < 0) {
+                        continue;
+                    }
+
+                    if (grid[newX][newY] == 1){
+                        innerMaxIsland++;
+                        grid[newX][newY] = 0;
+                        nodes.offer(new int[]{newX, newY});
+
+                    }
+                }
+            }
+        }
+
+        return innerMaxIsland;
+    }
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        TreeNode current = root;
+
+        if (current == p || current == q || current == null) {
+            return current;
+        }
+
+        TreeNode left = lowestCommonAncestor(current.left, p, q);
+        TreeNode right = lowestCommonAncestor(current.right, p, q);
+
+        if (left != null && right != null) {
+            return current;
+        }
+        else if (left != null) {
+            return left;
+        }
+        else if (right!=null) {
+            return right;
+        }
+        return null;
+    }
+
+    public int diameter;
+    public int diameterOfBinaryTree(TreeNode root) {
+        diameter = 0;
+        dfs(root);
+        return diameter;
+    }
+
+    public int dfs(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        TreeNode current = root;
+
+
+        int left = dfs(current.left);
+        int right = dfs(current.right);
+
+        diameter = Math.max(diameter, left + right);
+
+        return Math.max(left, right) + 1;
+    }
+
     // ** provided classes ** //
     public class TreeNode {
         int val;
