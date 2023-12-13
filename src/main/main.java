@@ -31,7 +31,13 @@ public class main {
 
         //List<List<Integer>> output = combinationSum3(3, 9);
 
-        int output = minDistance("horse", "ros");
+        //int output = minDistance("horse", "ros");
+        //int[] input = new int[]{1,2,2,1,1,3};
+        //boolean output = uniqueOccurrences(input);
+
+        int[] input = new int[]{1,2,3};
+        int output = pivotIndex(input);
+
         System.out.println(output);
     }
 
@@ -815,6 +821,76 @@ public class main {
         diameter = Math.max(diameter, left + right);
 
         return Math.max(left, right) + 1;
+    }
+
+
+    public int maxArea(int[] height) {
+        int left = 0;
+        int right = height.length - 1;
+        int max = 0;
+        while (left < right) {
+            int w = right - left;
+            int h = Math.min(height[left], height[right]);
+            int area = w * h;
+            max = Math.max(max, area);
+
+            if (height[left] < height[right]) {
+                left++;
+            } else if (height[right] < height[left]) {
+                right--;
+            } else {
+                left++;
+                right--;
+            }
+
+        }
+
+        return max;
+    }
+
+    public static boolean uniqueOccurrences(int[] arr) {
+        HashMap<Integer, Integer> dictionary = new HashMap();
+        HashSet<Integer> secondary = new HashSet<>();
+        for(int item : arr) {
+            int count = dictionary.getOrDefault(item, 0);
+            count++;
+            dictionary.put(item, count);
+        }
+        for(int value : dictionary.values()){
+            if (secondary.contains(value)){
+                return false;
+            } else {
+                secondary.add(value);
+            }
+        }
+
+        return true;
+    }
+
+    public static int largestAltitude(int[] gain) {
+        int current = 0;
+        int max = 0;
+        for(Integer change: gain) {
+            current = current + change;
+            max = Math.max(max, current);
+        }
+
+        return max;
+    }
+
+    public static int pivotIndex(int[] nums) {
+        int sum = 0;
+        int leftSum = 0;
+        for (int x: nums) {
+            sum = sum + x;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (leftSum == sum - leftSum - nums[i])  {
+                return i;
+            }
+            leftSum = leftSum + nums[i];
+        }
+        return -1;
     }
 
     // ** provided classes ** //
