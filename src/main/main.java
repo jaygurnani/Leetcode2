@@ -893,6 +893,54 @@ public class main {
         return -1;
     }
 
+    public ListNode deleteMiddle(ListNode head) {
+        if (head == null || head.next == null) {
+            return null;
+        }
+
+        ListNode slow = head;
+        ListNode fast = head.next.next;
+
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        slow.next = slow.next.next;
+        return head;
+    }
+
+    public ListNode oddEvenList(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+
+        if (head.next ==  null) {
+            return head;
+        }
+
+        ListNode even = head.next;
+
+        int counter = 2;
+        ListNode first = head;
+        ListNode second = head.next;
+        while(second.next != null) {
+            first.next = second.next;
+            first = second;
+            second = second.next;
+            counter++;
+        }
+
+        if (counter % 2 != 0) {
+            first.next = null;
+            second.next = even;
+        } else {
+            first.next = even;
+            second.next = null;
+        }
+
+        return head;
+    }
+
     // ** provided classes ** //
     public class TreeNode {
         int val;
@@ -905,5 +953,13 @@ public class main {
             this.left = left;
             this.right = right;
         }
+    }
+
+    public class ListNode {
+        int val;
+        ListNode next;
+        ListNode() {}
+        ListNode(int val) { this.val = val; }
+        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
     }
 }
