@@ -941,6 +941,26 @@ public class main {
         return head;
     }
 
+    public int pairSum(ListNode head) {
+        ListNode endNode = head;
+        ListNode startNode = head;
+        int max = 0;
+        Stack<ListNode> stack = new Stack<>();
+
+        while(endNode != null) {
+            stack.push(endNode);
+            endNode = endNode.next;
+        }
+
+        while (startNode != null) {
+            ListNode end = stack.pop();
+            max = Math.max(max, end.val + startNode.val);
+            startNode = startNode.next;
+        }
+
+        return max;
+    }
+
     // ** provided classes ** //
     public class TreeNode {
         int val;
