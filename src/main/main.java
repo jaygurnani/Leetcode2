@@ -961,6 +961,26 @@ public class main {
         return max;
     }
 
+    class RecentCounter {
+
+        Queue<Integer> queue;
+        public RecentCounter() {
+            queue = new LinkedList<>();
+        }
+
+        public int ping(int t) {
+            queue.add(t);
+            int lastItem = queue.peek();
+
+            while(lastItem < t - 3000) {
+                queue.poll();
+                lastItem = queue.peek();
+            }
+
+            return queue.size();
+        }
+    }
+
     // ** provided classes ** //
     public class TreeNode {
         int val;
