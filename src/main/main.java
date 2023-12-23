@@ -35,8 +35,12 @@ public class main {
         //int[] input = new int[]{1,2,2,1,1,3};
         //boolean output = uniqueOccurrences(input);
 
-        int[] input = new int[]{1,2,3};
-        int output = pivotIndex(input);
+        //int[] input = new int[]{1,2,3};
+        //int output = pivotIndex(input);
+
+        reOrg re = new reOrg();
+        String input = "vvvlo";
+        String output = re.reorganizeString(input);
 
         System.out.println(output);
     }
@@ -959,6 +963,87 @@ public class main {
         }
 
         return max;
+    }
+
+    public static class reOrg {
+        public String reorganizeString(String s) {
+
+            String output = "";
+            char[] sChar = s.toCharArray();
+            PriorityQueue<Pair> pq = new PriorityQueue<>(new PairComparator());
+            HashMap<Character, Integer> dictionary = new HashMap<>();
+            for(int i = 0; i < sChar.length; i++) {
+                if (dictionary.containsKey(sChar[i])){
+                    int item = dictionary.get(sChar[i]);
+                    item++;
+                    dictionary.put(sChar[i], item);
+                } else {
+                    dictionary.put(sChar[i], 1);
+                }
+            }
+
+            for(Character key: dictionary.keySet()){
+                pq.add(new Pair(dictionary.get(key), key));
+            }
+
+            while(!pq.isEmpty() && pq.size() != 1) {
+                Pair item1 = pq.poll();
+                Pair item2 = pq.poll();
+
+                if (item1 != null) {
+                    output = output + item1.character;
+                    item1.frequency--;
+                    if (item1.frequency > 0) {
+                        pq.add(new Pair(item1.frequency, item1.character));
+                    }
+                }
+                if (item2 != null) {
+                    output = output + item2.character;
+                    item2.frequency--;
+                    if (item2.frequency > 0) {
+                        pq.add(new Pair(item2.frequency, item2.character));
+                    }
+                }
+            }
+
+            if (pq.isEmpty()) {
+                return output;
+            }
+
+            if (pq.size() == 1) {
+                Pair item = pq.poll();
+                if (item.frequency == 1){
+                    return output + item.character;
+                } else {
+                    return "";
+                }
+            }
+
+            return output;
+        }
+
+        public class PairComparator implements Comparator<Pair> {
+            // Overriding compare()method of Comparator
+            // for descending order of cgpa
+            public int compare(Pair s1, Pair s2) {
+                if (s1.frequency < s2.frequency) {
+                    return 1;
+                } else if (s1.frequency > s2.frequency) {
+                    return -1;
+                }
+                return 0;
+            }
+        }
+
+        public class Pair {
+            public int frequency;
+            public char character;
+
+            public Pair(int frequency, Character character) {
+                this.frequency = frequency;
+                this.character = character;
+            }
+        }
     }
 
     class RecentCounter {
