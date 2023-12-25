@@ -1046,6 +1046,37 @@ public class main {
         }
     }
 
+    public static List<List<Integer>> findDifference(int[] nums1, int[] nums2) {
+        HashSet<Integer> hashset1 = new HashSet<>();
+        HashSet<Integer> hashset2 = new HashSet<>();
+        List<Integer> list1 = new ArrayList<>();
+        List<Integer> list2 = new ArrayList<>();
+
+        for(int i: nums1) {
+            hashset1.add(i);
+        }
+        for(int i: nums2) {
+            hashset2.add(i);
+        }
+
+        for(Integer i: hashset1) {
+            if (!hashset2.contains(i)) {
+                list1.add(i);
+            }
+        }
+
+        for(Integer i: hashset2) {
+            if (!hashset1.contains(i)) {
+                list2.add(i);
+            }
+        }
+
+        List<List<Integer>> returnList = new ArrayList<>();
+        returnList.add(list1);
+        returnList.add(list2);
+        return returnList;
+    }
+
     class RecentCounter {
 
         Queue<Integer> queue;
