@@ -1097,6 +1097,32 @@ public class main {
         }
     }
 
+    public int guessNumber(int n) {
+        int result = Integer.MIN_VALUE;
+        int resultAnswer = 0;
+        int min = 1;
+        int max = n;
+
+        while (min <= max) {
+            // We will run into integer division if we use
+            // resultAnswer = (min + max) / 2, so we use the below way to calculate min
+            resultAnswer =  min + (max - min) / 2;
+            result = guess(resultAnswer);
+
+            if (result == 0) {
+                return resultAnswer;
+            } else if (result == -1) {
+                // We can take the midpoint previously calculated and subtract 1
+                max = resultAnswer - 1;
+            } else if (result == 1) {
+                // We can take the midpoint previously calculated and add
+                min = resultAnswer + 1;
+            }
+        }
+
+        return resultAnswer;
+    }
+
     // ** provided classes ** //
     public class TreeNode {
         int val;
