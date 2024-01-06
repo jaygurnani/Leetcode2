@@ -1097,6 +1097,7 @@ public class main {
         }
     }
 
+
     public int guessNumber(int n) {
         int result = Integer.MIN_VALUE;
         int resultAnswer = 0;
@@ -1107,7 +1108,7 @@ public class main {
             // We will run into integer division if we use
             // resultAnswer = (min + max) / 2, so we use the below way to calculate min
             resultAnswer =  min + (max - min) / 2;
-            result = guess(resultAnswer);
+            //result = guess(resultAnswer);
 
             if (result == 0) {
                 return resultAnswer;
@@ -1121,6 +1122,33 @@ public class main {
         }
 
         return resultAnswer;
+    }
+
+    public String removeStars(String s) {
+        char[] charArray = s.toCharArray();
+        Stack<Character> stack = new Stack<>();
+        for(char c : charArray) {
+            if (c == '*') {
+                stack.pop();
+            } else {
+                stack.push(c);
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        while(!stack.isEmpty()) {
+            sb.append(stack.pop());
+        }
+        return sb.reverse().toString();
+    }
+
+    public int singleNumber(int[] nums) {
+        int result = 0;
+        for(int i: nums) {
+            result = result ^ i;
+        }
+
+        return result;
     }
 
     // ** provided classes ** //
